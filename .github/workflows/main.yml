@@ -21,20 +21,20 @@ jobs:
         # Trivyによるイメージスキャン
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-  with:
-        # DOCKERNAMEを使用（ネームスペース統一済み）
-    image-ref: '${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}'
-    format: 'table'
-    exit-code: '0'
-    ignore-unfixed: true
-    severity: 'CRITICAL,HIGH'
+        with:
+           # DOCKERNAMEを使用（ネームスペース統一済み）
+            image-ref: '${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}'
+            format: 'table'
+            exit-code: '0'
+            ignore-unfixed: true
+            severity: 'CRITICAL,HIGH'
     
-    # 🌟 追加修正: TrivyにDocker Hubの認証情報を渡す 🌟
-    # この設定により、ローカルに見つからない場合も認証付きでプルを試みます。
-    skip-tls-verification: false # 通常はfalse
-    username: ${{ secrets.DOCKERNAME }} 
-    password: ${{ secrets.DOCKER_PASSWORD }} # または DOCKER_TOKEN
-
+            # 🌟 追加修正: TrivyにDocker Hubの認証情報を渡す 🌟
+            # この設定により、ローカルに見つからない場合も認証付きでプルを試みます。
+            skip-tls-verification: false # 通常はfalse
+            username: ${{ secrets.DOCKERNAME }} 
+            password: ${{ secrets.DOCKER_PASSWORD }} # または DOCKER_TOKEN
+    
         # debug
       - name: List local Docker images for debugging
         run: docker images
