@@ -26,11 +26,11 @@ jobs:
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
 
         # debug
-          - name: List local Docker images for debugging
-            run: docker images
+      - name: List local Docker images for debugging
+        run: docker images
             
         # コンテナイメージをDocker Hubにプッシュ
       - name: Push image to Docker Hub
