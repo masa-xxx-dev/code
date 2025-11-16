@@ -18,9 +18,9 @@ jobs:
           # Dockerビルド
           DOCKER_BUILDKIT=1 docker image build . -f app/Dockerfile --tag ${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}
 
-       # Trivyによるイメージスキャン
-- name: Run Trivy vulnerability scanner
-  uses: aquasecurity/trivy-action@master
+        # Trivyによるイメージスキャン
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
   with:
     # DOCKERNAMEを使用（ネームスペース統一済み）
     image-ref: '${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}'
