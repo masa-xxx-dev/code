@@ -22,7 +22,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
   with:
-    # DOCKERNAMEを使用（ネームスペース統一済み）
+        # DOCKERNAMEを使用（ネームスペース統一済み）
     image-ref: '${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}'
     format: 'table'
     exit-code: '0'
