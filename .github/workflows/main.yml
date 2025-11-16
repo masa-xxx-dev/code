@@ -16,17 +16,24 @@ jobs:
       - name: Build an image from Dockerfile
         run: |
           # Dockerビルド
-          DOCKER_BUILDKIT=1 docker image build . -f app/Dockerfile --tag ${{ secrets.USERNAME }}/gitops-go-app:${{ github.run_number }}
+          DOCKER_BUILDKIT=1 docker image build . -f app/Dockerfile --tag ${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}
 
-        # Trivyによるイメージスキャン
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ secrets.USERNAME }}/gitops-go-app:${{ github.run_number }}'
-          format: 'table'
-          exit-code: '0'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+       # Trivyによるイメージスキャン
+- name: Run Trivy vulnerability scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    # DOCKERNAMEを使用（ネームスペース統一済み）
+    image-ref: '${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}'
+    format: 'table'
+    exit-code: '0'
+    ignore-unfixed: true
+    severity: 'CRITICAL,HIGH'
+    
+    # 🌟 追加修正: TrivyにDocker Hubの認証情報を渡す 🌟
+    # この設定により、ローカルに見つからない場合も認証付きでプルを試みます。
+    skip-tls-verification: false # 通常はfalse
+    username: ${{ secrets.DOCKERNAME }} 
+    password: ${{ secrets.DOCKER_PASSWORD }} # または DOCKER_TOKEN
 
         # debug
       - name: List local Docker images for debugging
@@ -39,8 +46,8 @@ jobs:
           docker login docker.io --username ${{ secrets.DOCKERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
         
           # イメージプッシュ
-          #docker image push ${{ secrets.USERNAME }}/gitops-go-app:${{ github.run_number }}
-          docker push ${{ secrets.USERNAME }}/gitops-go-app:${{ github.run_number }}
+          #docker image push ${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}
+          docker push ${{ secrets.DOCKERNAME }}/gitops-go-app:${{ github.run_number }}
 
         # values.yamlの更新、新規ブランチ作成、プッシュ、プルリクエスト
       - name: Update values.yaml & Pull Request to Config Repository
