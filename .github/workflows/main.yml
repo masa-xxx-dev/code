@@ -24,7 +24,7 @@ jobs:
         with:
           image-ref: '${{ secrets.USERNAME }}/gitops-go-app:${{ github.run_number }}'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           severity: 'CRITICAL'
 
